@@ -1,0 +1,10 @@
+.tweet {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	border-width: 5px;
+	padding: 10px;
+	border-style: groove;
+}
+
+.tweet:nth-child(odd) {
+	background-color: #99CCFF;
+}

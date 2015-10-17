@@ -3,25 +3,54 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <link href="style.css" rel="stylesheet" />
   </head>
-  <body>
+
+  <body> 
+    <button class="update-tweets" type='button'>Click here for latest tweets!</button> 
+    <div class="tweets"></div>
     <script>
 
-      $(document).ready(function(){
+      $(document).ready(function(){ 
         var $body = $('body');
-        $body.html('');
-
+//        $body.html('');
         var index = streams.home.length - 1;
+
+        var receivedTweets = [];
+
         while(index >= 0){
           var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
+          displayTweet(tweet);
+          receivedTweets.push(tweet);
           index -= 1;
         }
+        
+        // get timestamp of latest recieved tweet
+        // get all tweets from stream that were created after that timestamp
+        function getLatestTweets () {
+          var previousTimeStamp = receivedTweets[receivedTweets.length-1].created_at;
+          return streams.home.filter(function (tweet){
+            return tweet.created_at > previousTimeStamp;
+          });
+        }
 
+        // add a single tweet to the page
+        function displayTweet (tweet) {
+          var $tweet = $('<div></div>').addClass("tweet");
+          $tweet.text('@' + tweet.user + ': ' + tweet.message + " " + tweet.created_at);
+          $tweet.prependTo(".tweets");
+        }
+
+        function updateTweets() {
+          var latest = getLatestTweets();
+          latest.forEach(function (t) { displayTweet(t); })           
+        };    
+
+        $('button.update-tweets').on('click', updateTweets);
+          
       });
-
     </script>
+
+
   </body>
 </html>
